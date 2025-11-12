@@ -1,0 +1,61 @@
+10:16:26	 From David Beazley : One somewhat subtle aspect of this project is the similarity between a Python list and the proposed "Stack" data structure.
+10:17:07	 From David Beazley : Replying to "One somewhat subtle ..."
+
+A list has all of the required functionality, but there is no "push()" method as required.
+10:17:22	 From David Beazley : Replying to "One somewhat subtle ..."
+
+Instead it's called "append()"
+10:18:09	 From David Beazley : Replying to "One somewhat subtle ..."
+
+You're not allowed to change the test, so you'll have to figure out how to resolve that.
+11:10:26	 From David Beazley : Aforementioned story about violin being stolen while dog barking.  https://wgntv.com/news/chicago-news/vintage-violin-stolen-from-musicians-south-loop-home-as-family-slept/
+11:12:26	 From Stephen Cheng : Reacted to "Aforementioned story..." with 😃
+11:12:46	 From David Beazley : Regarding Exercise 3, one of my interests here is the concept of "partial failure" and "recoverable errors."
+11:13:15	 From David Beazley : If an exception is something that could be handled and recovered from, is the object left in a state that makes that possible or not?
+11:25:45	 From David Beazley : Exercise 4 is very much about the "substitution" idea.  The idea that you can swap out an object with an equivalent object if you want--as long as it serves the same purpose and has the same interface, it should work.
+11:31:51	 From David Beazley : I'm going to add a little more time.
+11:44:58	 From Iwan Sandjaja : Reacted to "Aforementioned story..." with 😃
+11:44:58	 From Iwan Sandjaja : Removed a 😃 reaction from "Aforementioned story..."
+11:54:18	 From Jeff Wang : I used a new interface
+12:24:12	 From Aniruddh Galgali  To  David Beazley(privately) : For mixin to work, does that mean my mixin classes (in your example DebugStackOps, NumericStack) need to be standalone i.e they cannot themselves inherit from some other class ? The reason I ask this question is because of the call to super() within the mixin classes, which in such a scenario would inherit from the parent class (if the parent class also has, say a push or pop method) instead of changing the functionality of the method in MyCalculator? Does my question make sense?
+12:25:37	 From David Beazley  To  Aniruddh Galgali(privately) : Replying to "For mixin to work, d..."
+
+Those classes can inherit from another class.   It is sometimes common for a mixin to inherit from some kind of BaseMixin class--mainly as a code organizational tool.
+14:12:10	 From David Beazley : This might not take 20 minutes.   I'm going to take a few minutes off.
+14:32:16	 From David Beazley : This problem is related to general problem of handling type variants.   If there are going to be different kinds of messages, then those are "variants" of a message.
+14:32:37	 From David Beazley : Is this an inheritance problem?
+14:32:49	 From David Beazley : Or is it some other kind of problem?
+14:33:04	 From David Beazley : (or maybe a combination of problems)
+14:35:02	 From David Beazley : I'm going to put more time on this now that I've read it over more.
+15:36:20	 From David Beazley : This exercise 4 is weird.   Every actor has as an `__init__()` method that sets it up.
+15:36:42	 From David Beazley : Yet, we somehow want to raise an exception if an Actor is directly instantiated.
+15:37:12	 From David Beazley : So, where in this code is this exception being raised?
+15:38:05	 From David Beazley : Also: The `Actor` class does NOT define an `__init__()` method of its own.  So you can't put it there.
+15:38:38	 From David Beazley : And even if you did put it there, the various Actor classes aren't calling `super().__init__()` to invoke it.  So, it wouldn't run anyways.
+15:41:33	 From David Beazley : Another consideration: I want to make this as "non-hacky" as possible for coders who are defining new Actor classes.
+15:41:48	 From David Beazley : Those classes should look normal.
+16:08:27	 From David Beazley : One could argue that doing something like this (messing around with instantiation) is just a bad idea.
+16:08:44	 From David Beazley : So, that's certainly something to consider.
+16:09:08	 From David Beazley : One would have to weigh the importance of all Actors living inside a manager.
+16:42:44	 From Alan Autrand : Passed a reference to manager in the message
+16:50:33	 From David Beazley : The cartoon is running strong throughout this whole project ;-)
+16:50:56	 From Vedant Puri : I need to head out a little early today, but I’ll catch up on the recording later. 
+
+Thanks David!
+16:51:23	 From David Beazley : Replying to "I need to head out a..."
+
+Later!
+17:02:48	 From Aniruddh Galgali : Replying to "The cartoon is runni..."
+
+This section was generally quite hard. I am going to have to revisit the recording multiple times ( I think)
+17:05:39	 From David Beazley : Replying to "The cartoon is runni..."
+
+I agree! (on hard)
+17:05:59	 From David Beazley : Replying to "The cartoon is runni..."
+
+There are a lot of intersecting concerns going on all at once here.
+17:11:33	 From David Beazley : Replying to "The cartoon is runni..."
+
+Aside: A lot of the complexity here is related to the complexity one encounters in a library such as `asyncio`  (which is well known for exploding heads of people who go poking inside its code).
+17:12:12	 From Iwan Sandjaja : Reacted to "Aside: A lot of the ..." with 🤯
+17:16:39	 From Bryan Harter : Sorry, kids came home from school and started attacking

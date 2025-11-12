@@ -1,0 +1,143 @@
+09:35:51	 From Jerry Zhang : They're teaching programming in kindergarten now?? I'm so out of touch already
+10:02:02	 From David Beazley : Replying to "They're teaching pro..."
+
+Having watched my kids work their way up to high school, it is extremely unclear to me what actual "programming" in the traditional sense it actually is.
+10:03:13	 From David Beazley : Replying to "They're teaching pro..."
+
+The attention span of kids is so crazily low, it most seems like it's been isolated "fooling around", but not much more than that.
+10:08:24	 From Bryan Harter : Replying to "They're teaching pro..."
+
+Yeah! My wife went to volunteer in the class one day and they were all making this robot move: https://store.makewonder.com/products/dash
+10:08:39	 From Bryan Harter : Replying to "They're teaching pro..."
+
+I'll try to convince the university to move to Scratch
+10:09:02	 From David Beazley : Replying to "They're teaching pro..."
+
+Ha!   I had a lot of fun doing the Scratch thing at university.
+10:10:00	 From Bryan Harter : Replying to "They're teaching pro..."
+
+I'll look forward to taking your Advanced Scratch Mastery course
+10:10:30	 From David Beazley : Replying to "They're teaching pro..."
+
+Basically, I started with that under the assumption that most students probably encountered Scratch in kindergarten or something (most had seen it somewhere).  Then, I pivoted into "you're all CS majors so let's build it."   And for that, I launched NetBeans and brought up Java.   "Wait, didn't you all learn Java for the AP Computer Science exam??:
+10:10:37	 From Alan Autrand : Replying to "They're teaching pro..."
+
+@David Beazley  To address msg5 can I change the class? Or do you want us to work only within the recreate_message function?
+10:11:01	 From David Beazley : Replying to "They're teaching pro..."
+
+You are not allowed to change any of the message classes.
+10:11:07	 From Alan Autrand : Replying to "They're teaching pro..."
+
+Ok thx
+10:11:50	 From David Beazley : Replying to "They're teaching pro..."
+
+Although---let me clarify slightly.  I don't want you changing the data structure of the classes or the protocol itself.
+10:12:42	 From David Beazley : Replying to "They're teaching pro..."
+
+(So, you CAN change the class as long as you don't break it's original interface)
+10:17:14	 From David Beazley : A major concern with this first part is exposure to hostile actors.
+10:17:35	 From David Beazley : We have no control over the sender or what they actually send us.
+10:17:51	 From David Beazley : Could be malicious content.
+10:32:21	 From Bryan Harter : globals()[msgtype](**dict)
+10:37:36	 From Alan Autrand : msg_types = {
+    "ChatMessage": ChatMessage,
+    "PlayerUpdate": PlayerUpdate,
+}
+
+try:
+    return msg_types[msgtype](**json.loads(payload))
+except Exception:
+    raise RuntimeError("Bad message")
+10:54:42	 From Alan Autrand : class PlayerUpdate(Message):
+    def __init__(self, playerid:str, x:int, y:int):
+        self._playerid = playerid
+        self.playerid = playerid
+        self._x = None
+        self.x = x
+        self._y = None
+        self.y = y
+
+    @property
+    def playerid(self):
+        return self._playerid
+
+    @playerid.setter
+    def playerid(self, playerid):
+        if isinstance(playerid, str):
+            self._playerid = playerid
+        else:
+            raise ValueError('playerid must be an str')
+11:04:53	 From David Beazley : I might add Exercise 4 to this as well.
+11:11:19	 From David Beazley : I added an example of dynamic code generation to init_subclass.
+11:11:59	 From David Beazley : Replying to "I added an example o..."
+
+There are many opportunities for "wild" programming with that kind of thing.
+11:14:45	 From Iwan Sandjaja : Reacted to "There are many oppor..." with 🤟
+11:17:55	 From David Beazley : Replying to "I added an example o..."
+
+On the whole... I'm actually a big fan of `__init_subclass__()`.  You can do a lot of actually useful things with that in a way that is actually very straightforward, easy to understand, and not hacky compared to other alternatives.
+11:28:58	 From David Beazley : Exercise 3 is actually quite open-ended.  And "hard" if you want to do it in a principled way.
+11:33:21	 From Aniruddh Galgali  To  David Beazley(privately) : Hi Dave,
+When I try to run the test for Exercise 2, I get a connection refused error. I think the logic of my receive_message implementation is correct, and actually almost the same as your implementation.
+11:33:39	 From Aniruddh Galgali  To  David Beazley(privately) : ConnectionRefusedError: [Errno 61] Connection refused
+11:34:30	 From David Beazley  To  Aniruddh Galgali(privately) : Replying to "ConnectionRefusedErr..."
+
+The test requires that `testmsg.py` be running in the background.  It's possible that that's failing for some reason.
+11:34:54	 From David Beazley  To  Aniruddh Galgali(privately) : Replying to "ConnectionRefusedErr..."
+
+Note:  The test tries to launch it as a subprocess.  Maybe that is failing.
+11:45:22	 From Aniruddh Galgali  To  David Beazley(privately) : Replying to "ConnectionRefusedErr..."
+
+Ah thanks. Was a path issue.
+11:45:58	 From David Beazley  To  Aniruddh Galgali(privately) : Replying to "ConnectionRefusedErr..."
+
+The fragile nature of the test itself is a good illustration of why a different testing approach might be useful ;-)
+11:54:03	 From David Beazley : We should try to do this problem in Scratch maybe.
+11:55:00	 From Iwan Sandjaja : Reacted to "We should try to do ..." with 🫶
+12:38:32	 From David Beazley : The performance testing on this is very open-ended.   If you wanted to try it on a real socket, you could copy the `testmsg.py` program and adapt it into a perf test.
+12:38:46	 From David Beazley : (instead of sending two messages, have it send 100000)
+12:51:48	 From David Beazley : https://sans-io.readthedocs.io
+14:15:03	 From David Beazley : I'm getting this:  baker=3 cooper=2 fletcher=4 miller=5 smith=1
+14:15:23	 From Aniruddh Galgali : Yep. Same
+14:16:35	 From David Beazley : The thing going on in this problem is related to something that software developers use on a regular basis.
+14:17:00	 From David Beazley : Replying to "The thing going on i..."
+
+(and not the elevator)
+14:34:35	 From David Beazley : This is maybe slightly related in spirit to that parsing project (Project 6).  In that project, we developed a "vocabulary" for parsing and then wrote various functions that expanded upon that.   Here, we're developing a vocabulary for describing logical constraints and trying to hide details.
+14:50:18	 From David Beazley : One thing I'm trying to do is make the code express the problem using the same kind of vocabulary.   Sometimes requirements are expressed in the positive ("miller lives on a higher floor than does Cooper" -> require(miller > cooper)).   Sometimes requirements are statement in the negative.  ("Baker does not live on the top floor" -> forbid(baker, 5)).
+15:04:07	 From Vedant Puri : I have to head out a little early and I will catch up on the recording later. 
+
+Thanks David for this course! 🙂
+15:04:24	 From David Beazley : Replying to "I have to head out a..."
+
+Thanks!
+15:39:02	 From Jeff Wang : Heading out early as well and will definitely review all the recordings. Thanks for all the insights David!
+15:42:47	 From David Beazley : I might describe this as a much more refined angle on testing.  Instead of creating random elevators, you're running a solver to find known "good" elevators.  In principle, we'd find every one.  Then, we can run tests on all of them.
+15:43:07	 From Aniruddh Galgali : I tried forbid(mode == ‘MOVINGUP’ and mode == ‘MOVINGDOWN’) and it didn’t change the number of good elevators. I would have thought that’s an unreachable state. Maybe I am missing something ?
+15:43:57	 From David Beazley : Replying to "I tried forbid(mode ..."
+
+Elevator can only have a single mode at any time.
+15:44:17	 From Aniruddh Galgali : Replying to "I tried forbid(mode ..."
+
+Ah I see. It’s analogous to the names in the previous example.
+15:44:20	 From David Beazley : Replying to "I tried forbid(mode ..."
+
+Right
+16:18:50	 From David Beazley : Is it a bug in the code or is it a bug in the spec?
+16:47:37	 From David Beazley : I managed to get it down to 77693 elevators. But wondering if it could be lower.
+16:49:22	 From Aniruddh Galgali : Reacted to "I managed to get it ..." with 😮
+16:49:49	 From David Beazley : Replying to "I managed to get it ..."
+
+Oh. Just lowered it to 31857.
+16:52:26	 From David Beazley : Replying to "I managed to get it ..."
+
+Oh. Except that I'm now getting tons and tons of test failures.  Maybe spec is too restrictive.
+16:53:05	 From David Beazley : Replying to "I managed to get it ..."
+
+Kind of a weird game being played.
+16:53:11	 From David Beazley : Replying to "I managed to get it ..."
+
+Between the spec and the implementation.
+16:57:01	 From David Beazley : Think there's a bug in the elevator, but it's a real weird one.
+16:59:46	 From Jerry Zhang : {'mode': 'MOVINGUP', 'floor': 3, 'destinations': {1, 2, 3, 4}, 'up_requests': {1, 2, 3, 4}, 'down_requests': {2, 3, 4}} : ('floor_sensor',4) -> Elevator(LOADINGUP, 4, {1, 2, 3}, {1, 2, 3}, {2, 3, 4})
+17:27:50	 From Iwan Sandjaja : I am definitely need to take this course again since the storm incident make my learning experience suboptimal.

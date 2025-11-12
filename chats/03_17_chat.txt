@@ -1,0 +1,122 @@
+09:36:52	 From David Beazley : Hi
+09:44:51	 From David Beazley : In this first project. I'm throwing you "sight unseen" into a programming problem with little guidance.
+09:45:03	 From David Beazley : Of interest here is the starting strategy.
+09:45:23	 From David Beazley : What is the first thing you work on?
+09:45:35	 From David Beazley : What is your thinking about the problem itself.
+10:03:03	 From Iwan Sandjaja  To  David Beazley(privately) : I don't have any programming environment setup in this computer. I will be passive for today and might catch up tomorrow. I am still lacking of sleep.
+10:03:29	 From David Beazley  To  Iwan Sandjaja(privately) : Replying to "I don't have any pro..."
+
+No worries.  Glad you're here and okay!
+10:03:38	 From Iwan Sandjaja  To  David Beazley(privately) : Replying to "I don't have any pro..."
+
+Thanks
+10:22:48	 From David Beazley : Is it okay to have partial attendees?
+10:24:35	 From David Beazley : Replying to "Is it okay to have p..."
+
+This is something that might arise if you start thinking in terms of types.   For example, do you have a function like this:   `compute_attendees(price : float) -> int: ... `
+10:28:59	 From Iwan Sandjaja : Replying to "Is it okay to have p..."
+
+I am more on the discrete (integer) type.
+10:31:46	 From David Beazley : Do you want to fix the final output so it shows `2.90` instead of something like `2.900000000017`?
+10:32:03	 From David Beazley : (if so, how?)
+10:33:02	 From Vedant Puri : I noticed you bound the search in your implementation. That isn’t something I considered myself, and that ended up making the implementation complex, which I am trying to clean up now.
+10:33:22	 From David Beazley : I'm going to add 5 more minutes to time.
+10:33:43	 From David Beazley : Replying to "I noticed you bound ..."
+
+Nothing in the problem says anything about bounds.
+10:34:01	 From David Beazley : Replying to "I noticed you bound ..."
+
+I suppose there is definitely a lower bound of "free".
+10:34:25	 From Vedant Puri : Replying to "I noticed you bound ..."
+
+That’s a good point, there’s definitely a lower bound
+10:35:48	 From David Beazley : Although, I suppose there could be some weird world where the owner pays you you come to the movie with the hope that he'll make all of the profit on food concessions.
+11:03:49	 From David Beazley : Ok. Crisis averted.  (Tablet working again).   Am I still screen sharing okay?
+11:05:53	 From Jerry Zhang : Reacted to "Ok. Crisis averted. ..." with 👍
+11:06:58	 From David Beazley : The first part of this project is related to something that I have done to myself numerous times in the past and usually regretted.
+11:07:42	 From David Beazley : Which is to overly rely upon Python built-in datatypes for data representation.   For example, using tuples everywhere in my code.
+11:08:01	 From Bryan Harter : Reacted to "Ok. Crisis averted. ..." with 👍
+11:08:40	 From David Beazley : And then maybe coding something horrible involving  tuple indices (like in frac.py).   Maybe the code is unreadable.   Maybe some kind of "new requirement" shows up and then I'm hating life as I try to fix everything.
+11:11:32	 From David Beazley : Apologies if giving everyone flashbacks to 5th grade ;-)
+11:12:20	 From Iwan Sandjaja : Reacted to "Although, I suppose ..." with 😯
+11:13:38	 From Iwan Sandjaja  To  David Beazley(privately) : Is this similar to writing our own Decimal class where we changes everything into Integer or Big Integer?
+11:14:01	 From Iwan Sandjaja : Is this similar to writing our own Decimal class where we changes everything into Integer or Big Integer?
+11:22:53	 From David Beazley : Replying to "Is this similar to w..."
+
+Definitely a similar concept.
+11:23:13	 From David Beazley : Replying to "Is this similar to w..."
+
+We want to be able to change the data representation to something else, but we don't want to break already written code.
+11:24:59	 From Iwan Sandjaja : Replying to "Is this similar to w..."
+
+Ah, data abstraction kind of thing...
+11:28:49	 From Vedant Puri : A question that comes to mind. How do we tell that an interface is complete ?
+
+In the fractions example, if I had just stopped at  make_frac  and not made a numerator / denominator accessor, I would still be exposing the tuple / dict implementation. 
+
+Its easy to see in fractions that we need accessors, but how do we go about thinking about interface completeness in general ?
+11:30:18	 From David Beazley : Replying to "A question that come..."
+
+Hmmm.  Probably an important thing would be to make that applications using the data are exclusively programming to the interface and nothing else.
+11:30:50	 From David Beazley : Replying to "A question that come..."
+
+Sometimes you hear about "leaky abstractions"
+11:31:12	 From David Beazley : Replying to "A question that come..."
+
+Usually refers to code that bypasses an interface to look at internals in some way.
+11:32:05	 From David Beazley : Exercise 3 is mostly a cut-paste exercise with an "observe that it works" afterwards.
+11:32:31	 From David Beazley : Will say more about it later--because it's kind of wild if you've never seen functions used in this way before.
+11:35:23	 From David Beazley : Exercise 4 is also a cut-paste exercise. Observe it works.
+11:35:42	 From David Beazley : Although "named tuple" may be a weird new thing.
+11:37:44	 From Vedant Puri : Replying to "A question that come..."
+
+Right, I am also thinking about it from the angle of usability. i.e. how to tell if this is the right layer of abstraction and makes things easier for the user while also hiding implementation.
+11:38:47	 From Vedant Puri : Replying to "A question that come..."
+
+Ex 5 touches on this a little bit with the possibility of accidentally accessing the tuple or unintended behaviors
+11:45:37	 From David Beazley : Exercise 5 is just evil and crazy/
+11:46:00	 From David Beazley : Replying to "Exercise 5 is just e..."
+
+(will definitely say more about that when we talk)
+12:19:06	 From Vedant Puri : Is this how mocking / patching in tests work ?
+12:29:23	 From Aniruddh Galgali : Wondering whether using a class method here would be a viable solution as well ?
+12:30:38	 From Aniruddh Galgali : Replying to "Wondering whether us..."
+
+I mean using a class method as an alternative to dunder init
+12:34:46	 From David Beazley : That named tuple business is definitely a whole world of crazy.
+12:35:04	 From David Beazley : I'm of the mind to avoid that.
+12:35:27	 From David Beazley : Make classes directly, don't do some weird "trick" like that.
+12:39:45	 From Iwan Sandjaja : Reacted to "I'm of the mind to a..." with ❤️
+12:39:56	 From Iwan Sandjaja : Reacted to "Make classes directl..." with 👍
+14:09:05	 From Aniruddh Galgali  To  David Beazley(privately) : Had a question about the implementation of —rsub—(self, other). I tried to implement it as other.—sub—(self) (after having defined —sub— using Strategy 1), but this threw an error on line 159. Ultimately, decided to use a more explicit definition (as is used when defining —sub—)
+14:10:21	 From David Beazley  To  Aniruddh Galgali(privately) : Replying to "Had a question about..."
+
+What kind of error?
+14:12:26	 From Aniruddh Galgali  To  David Beazley(privately) : Replying to "Had a question about..."
+
+Initially, it was the following:
+
+    g = 1 - a
+        ~~^~~
+TypeError: unsupported operand type(s) for -: 'int' and 'Fraction’ 
+
+After that it gave an assertion error.
+14:14:42	 From David Beazley  To  Aniruddh Galgali(privately) : Replying to "Had a question about..."
+
+Hmmm.   If you effectively calling `(1).__sub__(a)`, then I would expect it return `NotImplemented` which would likely cause an assertion fail.
+14:15:52	 From Aniruddh Galgali  To  David Beazley(privately) : Replying to "Had a question about..."
+
+Ah I see. That’s probably what it was. Thanks!
+14:17:17	 From David Beazley : I added a few more minutes.
+14:25:57	 From Iwan Sandjaja  To  David Beazley(privately) : slowly setting up my programming environment... I created the suggested branch with my name
+14:26:22	 From David Beazley  To  Iwan Sandjaja(privately) : Replying to "slowly setting up my..."
+
+Ok!
+14:48:47	 From David Beazley : I consider being able to work with lists/dicts to be pretty essential to a lot of Python.
+14:49:03	 From David Beazley : Especially working with web APIs, JSON, etc.
+14:50:15	 From David Beazley : But, I can also understand the appeal of using class definitions too (The Java perspective perhaps)
+15:17:57	 From Alan Autrand : I prefer a class. Makes it more readable
+15:18:54	 From Alan Autrand : I went with @property
+15:53:23	 From David Beazley : The "sort" operation becomes sort of strange if a class is introduced.
+17:06:05	 From Vedant Puri : Interesting implementation — it uses pandas data frame quite well. I hadn’t use the library so my first instinct was to simply convert the dataframe back to a list of Holdings and then implement  sort  and  iter
+17:28:27	 From Jeff Wang : Thank you! Enjoyed today

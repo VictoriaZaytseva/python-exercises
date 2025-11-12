@@ -1,0 +1,36 @@
+09:46:02	 From Vedant Puri : Making illegal states unrepresentable is a way of statically proving that all runtime values correspond to valid objects in the business domain.
+10:11:47	 From David Beazley : Replying to "Making illegal state..."
+
+I am a big fan of trying to do this if you can.
+10:12:01	 From David Beazley : Replying to "Making illegal state..."
+
+(Not always easy to see how when starting out on a project sometimes)
+10:12:49	 From David Beazley : I would strongly recommend trying some of the examples interactively just to see how this works.
+10:23:29	 From David Beazley : This parse_setting() function is probably pretty messy and "fiddly"
+10:23:45	 From David Beazley : Unpacking, updating an index, etc.
+10:33:00	 From David Beazley : Could be an opportunity to use the := operator.
+10:53:44	 From David Beazley : Recognizing common patterns (like with string templates) is a super-power of higher-order functions.
+11:05:01	 From David Beazley : Adding 5 minutes
+11:46:32	 From David Beazley : Adding 5 minutes (person at door)
+12:28:12	 From David Beazley : One danger of coding something like this is that doing so involves a certain kind of "flow" perhaps.  You get in the groove of what's happening and then write a bunch of code.  A year later you come back to that code and the first thought that comes to your mind is "What the .... ?"
+12:52:28	 From Jerry Zhang : Reacted to "One danger of coding..." with 👆
+14:17:12	 From David Beazley : Start by looking at the file `after.py`
+14:19:29	 From David Beazley : Aside: This function is very similar to the `spawn()` method of the Manager in Project 4 (Actors).
+14:55:43	 From David Beazley : Stepping away for a brief moment.
+15:05:50	 From David Beazley : Part 2 of ex3 is making my head explode
+15:06:05	 From David Beazley : Replying to "Part 2 of ex3 is mak..."
+
+Or at least making my eyes bleed
+15:20:13	 From David Beazley : That thing with the stars would definitely be a good contender for an "obscure Python programming contest" I think!
+15:20:49	 From David Beazley : Also a "how to get fired" programming contest.
+15:35:04	 From Vedant Puri : I think  Go  also works this way, always returns a result
+16:28:33	 From David Beazley : Note: I would consider the last part of ex6 to be way out on the "bleeding edge" of what might be possible with structural pattern matching and exceptions.    I don't entirely hate it.
+16:28:55	 From David Beazley : But, if I were to spring this on people, I could see a possible strong (possibly negative) reaction to it.
+16:31:39	 From David Beazley : I'd also note: pattern matching is a whole different world than normal Python!
+17:04:53	 From Vedant Puri : (__rshift__) I think its used in Airflow for a similar purpose
+17:11:53	 From Vedant Puri : The  Path  class also overrides the  __div__  operator in a pretty clever way, imo
+17:13:07	 From Jerry Zhang : I wonder if there are similar ways to override native syntaxes in javscript classes
+
+Never seen them before but I wish it were possible
+17:24:16	 From Vedant Puri : r = Ok(2) >> after(1)(A) >> B >> after(3)(C)
+17:33:27	 From Bryan Harter : Got to head out, have a good one!

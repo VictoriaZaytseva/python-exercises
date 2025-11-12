@@ -1,0 +1,66 @@
+10:29:14	 From Bryan Harter : fun fact: I work with Donald Knuth's daughter
+10:29:41	 From Jerry Zhang : Reacted to "fun fact: I work wit..." with 😲
+10:37:22	 From David Beazley : Replying to "fun fact: I work wit..."
+
+Interesting.
+10:37:57	 From David Beazley : One challenge, generally, in this problem is stripping away details over which I have no control.
+10:38:47	 From David Beazley : For example, low-level details related to HW control.   I just have no idea about that.   Maybe I don't need all of those details in the logic.
+11:44:14	 From Iwan Sandjaja : Reacted to "fun fact: I work wit..." with ❤️
+11:45:20	 From Iwan Sandjaja : I need to step out. The electricity is restored. We need to go back to Rolla now.
+11:45:33	 From Jerry Zhang : Reacted to "I need to step out. ..." with 🎉
+12:12:34	 From David Beazley : One of the things I'm thinking about right now is not so much details of the algorithm, but the overall structure of the code itself.  How am I actually going to test this code?  How can I debug it?  Can I program defensively?
+12:40:35	 From David Beazley : I am generally wondering about the request queue idea.
+14:40:09	 From Vedant Puri : That’s pretty wild that python lets you do that
+14:42:38	 From Jerry Zhang : Replying to "That’s pretty wild t..."
+
+horrifying
+14:49:46	 From David Beazley : One subtle thing about this is that elevators would probably be considered to be "safety critical."   Therefore, being highly organized about code structure and accountability would probably be of benefit.
+14:50:08	 From David Beazley : Essentially, making sure that you are fully accountable for handling every possible input that can occur in every possible state.
+14:51:06	 From David Beazley : Breaking the classes up like this might encourage that even though it looks like a frightening complexity at first.
+15:01:51	 From Vedant Puri : Is there any use of the floor sensor in the software ?
+I didn’t encode it anywhere and it felts like something that could be delegated to the hardware controller
+15:02:35	 From David Beazley : Replying to "Is there any use of ..."
+
+The logic needs to know when the elevator arrives at different floors.
+15:03:08	 From David Beazley : Replying to "Is there any use of ..."
+
+The sensor is a notification from the HW.  Logic might have to make decisions from that (whether to stop, keep on going, etc.)
+15:03:36	 From Vedant Puri : Reacted to "The sensor is a noti..." with 👍
+15:18:18	 From David Beazley : One comment: If we start to get into details of the implementation, the most complicated cases to handle are usually focused around "turnaround points."   That is, situations whether the elevator decides to change direction.
+15:26:41	 From Vedant Puri : Any opinions on teasing apart  ElevatorState  as a separate class that contains everything but mode ? 
+
+Then, instead of passing the elevator class, we can simply pass around the state. 
+
+I don’t think it changes much functionally, but felt a bit cleaner ?
+15:27:36	 From David Beazley : Replying to "Any opinions on teas..."
+
+Is there still a concept of mode in the implementation?
+15:27:56	 From Vedant Puri : Replying to "Any opinions on teas..."
+
+Yes
+15:28:09	 From Vedant Puri : Replying to "Any opinions on teas..."
+
+Elevator has a state and a mode
+15:28:43	 From David Beazley : Replying to "Any opinions on teas..."
+
+Oh, so a kind of outer class with those two things?
+15:29:10	 From David Beazley : Replying to "Any opinions on teas..."
+
+That seems like it could work well.
+15:29:11	 From Vedant Puri : Replying to "Any opinions on teas..."
+
+Yeah and then Elevator manages the switching of the modes
+15:29:17	 From Vedant Puri : Reacted to "That seems like it c..." with 👍
+16:21:00	 From David Beazley : I think a big thing for me on this whole project is that I just don't trust myself to not make mistakes.
+16:21:28	 From David Beazley : So, super interested in both structure (encouraging accountability) and defensive programming strategies.
+16:26:20	 From Bryan Harter : We use their elevator code thing as more of a springboard for discussions with them in an interview, just to see how they think about solving a problem. Also, to prove they can make and run a python package. Overall I think we're actually pretty lenient; I'm looking through our interview history and we've offered a position to everyone that got to the coding test phase lol
+16:27:23	 From David Beazley : Replying to "We use their elevato..."
+
+I actually love this problem for all of the different dimensions of it.
+16:29:10	 From David Beazley : If one wanted to go really crazy, you could think about how this problem might extend to multiple elevator cars.
+16:34:01	 From David Beazley : Dealing with button behavior is kind of nightmare.
+16:34:45	 From David Beazley : There are all sorts of weird edge cases.   Like, if elevator is moving up, do you recognize a destination button that's on a lower floor?
+16:40:04	 From Aniruddh Galgali : The idea of using states/modes as classes was truly mind-blowing. As someone who collaborates with neuroscientists who design automated behavioral experiments (nothing but a finite state machine if one thinks about it) , I can immediately see how much cleaner this would make designing the logic of a complex experiment.
+17:09:33	 From David Beazley : Arg.
+17:23:35	 From Bryan Harter : Here is our exact interview question for reference in case you all are curious (I don't mind sharing it because we're changing it soon):Construct a class that simulates an elevator that is on the Xth floor of a Z story building. The elevator travels at 1 floor/10 seconds (don't worry about acceleration/deceleration, etc.). Input will include a list of floor requests. Output will be: Current floor of the elevator, floors left to arrive at destination, time left to arrive at destination. Be sure to list any assumptions you feel should be known. The language preference is Python. Keep in mind we will want to run it, and we are interested in seeing software engineering best practices including documentation, readability, testing, etc.
+17:24:06	 From Jerry Zhang : Reacted to "Here is our exact in..." with 👀
