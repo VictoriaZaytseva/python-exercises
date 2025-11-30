@@ -33,6 +33,17 @@ def denominator(f):
 # Verify that it still passes all of the unit tests--somehow.
 
 ... # Your code here
+def add_frac(a, b):
+    return make_frac(numerator(a) * denominator(b) + denominator(a) * numerator(b), denominator(a) * denominator(b))
+
+def sub_frac(a, b):
+    return make_frac(numerator(a) * denominator(b) - denominator(a) * numerator(b), denominator(a) * denominator(b))
+
+def mul_frac(a, b):
+    return make_frac(numerator(a) * numerator(b), denominator(a) * denominator(b))
+
+def div_frac(a, b):
+    return make_frac(numerator(a) * denominator(b), denominator(a) * numerator(b))
 
 # Unit tests.  This is the same set of tests as before.  NO CHANGES MADE.
 def test_frac():

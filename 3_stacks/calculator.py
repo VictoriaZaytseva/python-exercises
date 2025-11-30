@@ -31,34 +31,95 @@
 
 class Calculator:
     def __init__(self):
-        ...                      # Should *NOT* depend on a separate Stack class
+        self._stack = []# Should *NOT* depend on a separate Stack class
         
     def push(self, value):
-        ...
+        if not isinstance(value, (int, float)):
+            raise TypeError("A number is required")
+        else:
+            self._stack.append(value)
 
     def pop(self):
-        ...
+        return self._stack.pop()
 
     def swap(self):           # Swap top two stack items
-        ...
+        if(len(self._stack) < 2):
+            raise Exception("Not enough values on stack")
+        else: 
+            first = self._stack.pop()
+            second = self._stack.pop()
+            self._stack.append(first)
+            self._stack.append(second)
 
     def add(self):
-        ...
+        if(len(self._stack) < 2):
+            raise Exception("Not enough values on stack")
+        else: 
+            first = self._stack.pop()
+            second = self._stack.pop()
+            self._stack.append(first + second)
+    
 
     def sub(self):
-        ...
+        if(len(self._stack) < 2):
+            raise Exception("Not enough values on stack")
+        else: 
+            first = self._stack.pop()
+            second = self._stack.pop()
+            self._stack.append(second - first)
 
     def mul(self):
-        ...
+        if(len(self._stack) < 2):
+            raise Exception("Not enough values on stack")
+        else: 
+            first = self._stack.pop()
+            second = self._stack.pop()
+            self._stack.append(first * second)
 
     def div(self):
-        ...
+        if(len(self._stack) < 2):
+            raise Exception("Not enough values on stack")
+        else: 
+            first = self._stack.pop()
+            second = self._stack.pop()
+            self._stack.append(second / first)
 
     def pow(self):            # Power
-        ...
+        if(len(self._stack) < 2):
+            raise Exception("Not enough values on stack")
+        else: 
+            first = self._stack.pop()
+            second = self._stack.pop()
+            self._stack.append(second ** first)
 
     def sqrt(self):           # Computes sqrt of the top. Use math.sqrt
-        ...
+        if(len(self._stack) < 1):
+            raise Exception("Not enough values on stack")
+        else: 
+            import math
+            first = self._stack.pop()
+            self._stack.append(math.sqrt(first))
+    def run(self, instructions):
+        for instr in instructions:
+            op = instr[0]
+            if op == 'push':
+                self.push(instr[1])
+            elif op == 'add':
+                self.add()
+            elif op == 'sub':
+                self.sub()
+            elif op == 'mul':
+                self.mul()
+            elif op == 'div':
+                self.div()
+            elif op == 'pow':
+                self.pow()
+            elif op == 'sqrt':
+                self.sqrt()
+            elif op == 'swap':
+                self.swap()
+            else:
+                raise RuntimeError(f"Unknown instruction: {op}")
 
 def test_calculator(calc):
     calc.push(23)
@@ -151,7 +212,7 @@ def test_hypot():
     print("Good script!")
 
 # Uncomment
-# test_hypot()
+test_hypot()
 
 # -----------------------------------------------------------------------------
 # Exercise 9 - The Code Generator

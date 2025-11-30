@@ -28,26 +28,28 @@
 # Continue to `portfolio.py` to start the project.
 
 import portfolio
+import os
+import sys
 
 def make_report(portfolio):
     '''
     Print a report
     '''
-    portfolio.sort(key=lambda h: h['shares']*h['price'], reverse=True)
+    portfolio.sort(key=lambda h: h.value, reverse=True)
     print('{:>10} {:>10} {:>10} {:>10}'.format('name','shares','price','value'))
     print(('-'*10 + ' ')*4)
     total_value = 0.0
     for holding in portfolio:
-        value = holding['shares']*holding['price']
+        value = holding.shares*holding.price
         total_value += value
-        print(f'{holding["name"]:>10s} {holding["shares"]:10d} {holding["price"]:10.2f} {value:10.2f}')
+        print(f'{holding.name:>10s} {holding.shares:10d} {holding.price:10.2f} {value:10.2f}')
 
     print()
     print(f'Total value: {total_value:0.2f}')
 
 def main(filename):
-    port = portfolio.read_portfolio(filename)
+    port = portfolio.read_portfolio_as_classes(filename)
     make_report(port)
     
 if __name__ == '__main__':
-    main('portfolio.csv')
+    main(os.path.join(os.path.dirname(sys.argv[0]),'portfolio.csv'))

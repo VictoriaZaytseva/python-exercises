@@ -43,7 +43,20 @@
 #    >>>
 # -----------------------------------------------------------------------------
 
-class Stack: ...         # You define
+class Stack:
+    def __init__(self):
+        self._items = []
+    
+    def push(self, value):
+        self._items.append(value)
+                 
+    def pop(self):
+        return self._items.pop()
+    
+    def __len__(self):
+        return len(self._items)
+
+
 
 def test_stack(s):     # s is a Stack instance
     s.push(23)
@@ -54,7 +67,7 @@ def test_stack(s):     # s is a Stack instance
     assert len(s) == 0
     print("Good stack!")
 
-# test_stack(Stack())    # You need to define the Stack class
+test_stack(Stack())    # You need to define the Stack class
 
 # -----------------------------------------------------------------------------
 # Exercise 2 - A Calculator
@@ -86,7 +99,49 @@ def test_stack(s):     # s is a Stack instance
 # -----------------------------------------------------------------------------
 
 # You define a "Calculator" class here.
+class Calculator:
+    
+    def __init__(self, stack):
+        self._stack = stack
+    
+    def push(self, value):
+        self._stack.push(value)
+    
+    def pop(self):
+        return self._stack.pop()
+    
+    def add(self):
+        if(len(self._stack) < 2):
+            raise Exception("Not enough values on stack")
+        else: 
+            first = self._stack.pop()
+            second = self._stack.pop()
+            self._stack.push(first + second)
+    
+    def mul(self):
+        if(len(self._stack) < 2):
+            raise Exception("Not enough values on stack")
+        else: 
+            first = self._stack.pop()
+            second = self._stack.pop()
+            self._stack.push(first * second)
 
+    def div(self):
+        if(len(self._stack) < 2):
+            raise Exception("Not enough values on stack")
+        else: 
+            first = self._stack.pop()
+            second = self._stack.pop()
+            self._stack.push(second // first)
+    
+    def sub(self):
+        if(len(self._stack) < 2):
+            raise Exception("Not enough values on stack")
+        else: 
+            first = self._stack.pop()
+            second = self._stack.pop()
+            self._stack.push(second - first)            
+        
 def test_calculator(calc):
     calc.push(23)
     calc.push(45)
@@ -114,8 +169,8 @@ def test_calculator(calc):
 # For the above test, you need to create the "Calculator" instance calc and pass 
 # it to the above test
 #
-# calc = ... ???
-# test_calculator(calc)            # Uncomment
+calc = Calculator(Stack())
+test_calculator(calc)            # Uncomment
 
 # -----------------------------------------------------------------------------
 # Exercise 3 - The Mutable
@@ -141,7 +196,7 @@ def test_failure(calc):
     calc.add()                    # Does this work?
     assert calc.pop() == 68       # Does this work?
 
-# test_failure(Calculator())      # Uncomment
+test_failure(Calculator(Stack()))      # Uncomment
 
 # YOUR TASK: Modify the calculator class so that its methods either
 # work entirely or fail entirely.  Methods that fail should leave the
@@ -197,8 +252,8 @@ class NumericStack(Stack):
 
 # Verify that these Stacks pass the test for Stack by uncommenting these lines.
 #
-# test_stack(DebugStack())
-# test_stack(NumericStack())
+test_stack(DebugStack())
+test_stack(NumericStack())
 #
 # Note: This is a perfectly reasonable use of inheritance--using it to create
 # a modified stack. 
@@ -207,8 +262,8 @@ class NumericStack(Stack):
 # calculator.  Make sure you can run the test_calculator() test and
 # that it works without modification.
 #
-# test_calculator(... use DebugStack ...)
-# test_calculator(... use NumericStack ...)
+test_calculator(Calculator(DebugStack()))
+test_calculator(Calculator(NumericStack()))
 
 
 # -----------------------------------------------------------------------------
@@ -243,9 +298,10 @@ class NumericPush:             # There is *NO* inheritance here.
         if not isinstance(item, (int, float)):
             raise TypeError("Must be a number")
         super().push(item)
-
-calc = ...     # Create a calculator with both of the above classes in effect
-# test_calculator(calc)      # Uncomment
+class MyCalculator(DebugStackOps, NumericPush, Calculator):
+    pass
+calc = MyCalculator(Stack()) # Create a calculator with both of the above classes in effect
+test_calculator(calc)      # Uncomment
 
 # -----------------------------------------------------------------------------
 # Exercise 6 - "The Patch"

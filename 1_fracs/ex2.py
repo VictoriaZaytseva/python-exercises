@@ -26,19 +26,32 @@ def gcd(a, b):
 
 def make_frac(numer, denom):
     d = gcd(numer, denom)
+    # (numer // d, denom // d)
     return {
-        ...   # Return a dict of some kind (don't forget the gcd part)
+        'numer': numer // d,
+        'denom': denom // d
+         # Return a dict of some kind (don't forget the gcd part)
     }
 
 def numerator(f):
-    pass
+    return f["numer"]
 
 def denominator(f):
-    pass
+    return f["denom"]
 
 # Paste the implementation of add_frac(), sub_frac(), mul_frac(), div_frac()
 # from ex1.py here. MAKE NO CHANGES TO THAT CODE.
+def add_frac(a, b):
+    return make_frac(numerator(a) * denominator(b) + denominator(a) * numerator(b), denominator(a) * denominator(b))
 
+def sub_frac(a, b):
+    return make_frac(numerator(a) * denominator(b) - denominator(a) * numerator(b), denominator(a) * denominator(b))
+
+def mul_frac(a, b):
+    return make_frac(numerator(a) * numerator(b), denominator(a) * denominator(b))
+
+def div_frac(a, b):
+    return make_frac(numerator(a) * denominator(b), denominator(a) * numerator(b))
 
 # Unit tests.  This is the same set of tests as before.  NO CHANGES MADE.
 def test_frac():
@@ -52,6 +65,7 @@ def test_frac():
     assert (numerator(c), denominator(c)) == (-3, 4)
 
     d = add_frac(a, b)
+    print(numerator(d))
     assert (numerator(d), denominator(d)) == (17, 12)
 
     e = sub_frac(a, b)

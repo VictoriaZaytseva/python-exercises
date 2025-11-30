@@ -39,14 +39,60 @@ class Fraction:
 
     # Define various magic methods for Python operators
     def __add__(self, other):
-        ...
-
+        return Fraction(self.numerator * other.denominator + self.denominator * other.numerator, self.denominator * other.denominator)  
+    
     def __sub__(self, other):
-        ...
-
-    ...
-
-
+        return Fraction(self.numerator * other.denominator - self.denominator * other.numerator, self.denominator * other.denominator)      
+  
+    def __mul__(self, other):
+        return Fraction(self.numerator * other.numerator, self.denominator * other.denominator)
+    
+    def __truediv__(self, other):
+        return Fraction(self.numerator * other.denominator, self.denominator * other.numerator) 
+    
+    def __radd__(self, other):
+        return Fraction(self.numerator + other * self.denominator, self.denominator)
+    
+    def __rsub__(self, other):
+        return Fraction(other * self.denominator - self.numerator, self.denominator)
+    
+    def __rmul__(self, other):
+        return Fraction(self.numerator * other, self.denominator)
+    
+    def __rtruediv__(self, other):
+        return Fraction(other * self.denominator, self.numerator)
+    
+    # Comparison operators
+    def __eq__(self, other):
+        return self.numerator * other.denominator == self.denominator * other.numerator
+    def __ne__(self, other):
+        return self.numerator * other.denominator != self.denominator * other.numerator
+    def __lt__(self, other):
+        return self.numerator * other.denominator < self.denominator * other.numerator
+    def __le__(self, other):
+        return self.numerator * other.denominator <= self.denominator * other.numerator
+    def __gt__(self, other):
+        return self.numerator * other.denominator > self.denominator * other.numerator
+    def __ge__(self, other):
+        return self.numerator * other.denominator >= self.denominator * other.numerator
+    # Niceties
+    def __str__(self):
+        if self.denominator == 1:
+            return f"{self.numerator}"
+        elif self.numerator == 0:
+            return "0"
+        else:
+            return f"{self.numerator}/{self.denominator}"
+    
+    def __repr__(self):
+        return f"Fraction({self.numerator}, {self.denominator})"
+   
+    def __float__(self):
+        return self.numerator / self.denominator
+   
+    def __int__(self):
+        return self.numerator // self.denominator    
+        
 # Legacy interface.   We'll continue to support it for backwards compatibility
 def make_frac(numerator, denominator):
     return Fraction(numerator, denominator)
@@ -72,16 +118,16 @@ def denominator(f):
 #          return a + b
 
 def add_frac(a, b):
-    ...
+    return a + b
 
 def sub_frac(a, b):
-    ...
+    return a - b 
 
 def mul_frac(a, b):
-    ...
+    return a * b
 
 def div_frac(a, b):
-    ...
+    return a / b
 
 # The old unit tests must still pass (legacy code)
 def test_frac():
@@ -94,7 +140,7 @@ def test_frac():
     c = make_frac(3, -4)
     assert (numerator(c), denominator(c)) == (-3, 4)
 
-    d = add_frac(a, b)
+    d = add_frac(a, b)    
     assert (numerator(d), denominator(d)) == (17, 12)
 
     e = sub_frac(a, b)
@@ -175,7 +221,7 @@ def test_math():
 
     print('Good math')
 
-# test_math()
+test_math()
 
 # -----------------------------------------------------------------------------
 # Niceties
@@ -205,5 +251,5 @@ def test_nice():
     print('Nice fractions')
 
 # Uncomment when ready
-# test_nice()
+test_nice()
 

@@ -37,6 +37,17 @@ def denominator(f):
 
 # Paste in your earlier code for add_frac, sub_frac, mul_frac, div_frac.
 # It should work without modification.
+def add_frac(a, b):
+    return make_frac(numerator(a) * denominator(b) + denominator(a) * numerator(b), denominator(a) * denominator(b))
+
+def sub_frac(a, b):
+    return make_frac(numerator(a) * denominator(b) - denominator(a) * numerator(b), denominator(a) * denominator(b))
+
+def mul_frac(a, b):
+    return make_frac(numerator(a) * numerator(b), denominator(a) * denominator(b))
+
+def div_frac(a, b):
+    return make_frac(numerator(a) * denominator(b), denominator(a) * numerator(b))
 
 # Unit tests. These are the same tests as before. NO CHANGES MADE.
 def test_frac():

@@ -4,7 +4,7 @@
 # "name,shares,price" data into a list of dictionaries.  The file
 # `report.py` uses this function.   We'll make some modifications
 # in exercises below.
-
+from dataclasses import dataclass
 def read_portfolio(filename):
     '''
     Read a CSV file of name, shares, price data into a list of dicts.
@@ -19,6 +19,23 @@ def read_portfolio(filename):
             shares = int(row[1])
             price = float(row[2])
             holding = { 'name': name, 'shares': shares, 'price': price }
+            portfolio.append(holding)
+    return portfolio
+
+def read_portfolio_as_classes(filename):
+    '''
+    Read a CSV file of name, shares, price data into a list of Portfolio class instances.
+    '''
+    portfolio = []
+    with open(filename  , "r") as file:
+        # Skip the first line of headers
+        next(file)
+        for line in file:
+            row = line.split(',')
+            name = row[0]
+            shares = int(row[1])
+            price = float(row[2])
+            holding = Holding(name, shares, price)
             portfolio.append(holding)
     return portfolio
 
@@ -63,9 +80,11 @@ def read_portfolio(filename):
 # we're going to keep the make_report() function separate.  That
 # should NOT turn into a method.
 
-class Portfolio:
-    ...
-
+@dataclass
+class Holding:
+    name: str
+    shares: int
+    price: float
 # -----------------------------------------------------------------------------
 # Exercise 3: Data Abstraction
 #
