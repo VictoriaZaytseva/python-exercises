@@ -22,7 +22,7 @@
 # this exercise.  This is addressing a separate concern.
 
 from dataclasses import dataclass
-
+import inspect
 # --- This code is copied directly from actors.py
 @dataclass
 class Message:
@@ -31,6 +31,14 @@ class Message:
     content : str
 
 class Actor:
+    def __init__(self):
+         
+         if(inspect.stack()[2].code_context[0].strip().startswith('manager.spawn')):
+             # Good, being created by the manager
+             pass
+         else:
+             raise RuntimeError('Actors must be created via Manager.spawn()')
+         
     def __del__(self):
         print(f'{self} is going away')
         
@@ -52,6 +60,7 @@ class Manager:
 # An example actor
 class Printer(Actor):
     def __init__(self, name):
+        super().__init__()
         self.name = name
         self.count = 0
         
@@ -77,6 +86,8 @@ class Printer(Actor):
 # The following test verifies the correct behavior.
 
 def test_instantiation():
+    manager = Manager()
+    manager.spawn('alice', Printer('Alice'))  # This should work
     # This should fail
     try:
         p = Printer('Bob')
@@ -85,7 +96,7 @@ def test_instantiation():
         print('Good actor!')        
 
 # Uncomment
-# test_instantiation()
+test_instantiation()
 
 # -----------------------------------------------------------------------------
 # Exercise 5 : Enabling the Manager

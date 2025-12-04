@@ -83,7 +83,7 @@ def printer_example():
 # two messages displayed along with a notification about the
 # Printer actor "going away."
 
-# printer_example()
+printer_example()
 
 # Question: Actors are always referenced by an address which
 # is a string such as 'printer' in this example.  Is there
@@ -115,7 +115,7 @@ def manager_example():
     print('You should have seen two "going away" messages above')
 
 # Uncomment
-# manager_example()
+manager_example()
 
 # -----------------------------------------------------------------------------
 # Discussion:
