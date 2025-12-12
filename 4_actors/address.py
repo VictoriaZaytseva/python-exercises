@@ -22,7 +22,6 @@
 # this exercise.  This is addressing a separate concern.
 
 from dataclasses import dataclass
-import inspect
 # --- This code is copied directly from actors.py
 @dataclass
 class Message:
@@ -31,14 +30,10 @@ class Message:
     content : str
 
 class Actor:
-    def __init__(self):
-         
-         if(inspect.stack()[2].code_context[0].strip().startswith('manager.spawn')):
-             # Good, being created by the manager
-             pass
-         else:
-             raise RuntimeError('Actors must be created via Manager.spawn()')
-         
+
+    def __new__(cls, *args, **kwargs):
+        raise RuntimeError('Actors cannot be instantiated directly!')
+                 
     def __del__(self):
         print(f'{self} is going away')
         
@@ -56,11 +51,16 @@ class Manager:
     def spawn(self, address: str, actor: Actor) -> str:
         self._actors[address] = actor
         return address
+    
+    def spawn(self, address: str, actor_cls, *args) -> str:
+        actor = object.__new__(actor_cls)
+        actor.__init__(*args)
+        self._actors[address] = actor
+        return address
 
 # An example actor
 class Printer(Actor):
     def __init__(self, name):
-        super().__init__()
         self.name = name
         self.count = 0
         
@@ -96,7 +96,7 @@ def test_instantiation():
         print('Good actor!')        
 
 # Uncomment
-test_instantiation()
+#test_instantiation()
 
 # -----------------------------------------------------------------------------
 # Exercise 5 : Enabling the Manager
@@ -147,7 +147,7 @@ def spawn_example(m : Manager):
     print('You should have seen a message about Printer going away')
 
 # Uncomment
-# spawn_example()
+spawn_example(Manager())
         
 # -----------------------------------------------------------------------------
 # Exercise 6 : The Test
@@ -165,14 +165,17 @@ def spawn_example(m : Manager):
 
 def test_example():
     # This will not work as written (see Exercise 4-5).
-    p = Printer('Alice')
-    p.handle_message(Message(source='test-example',
-                             dest='alice',
-                             content='Hi Alice!'))
+    manager = Manager()
+    address = manager.spawn('alice', Printer, 'Alice')
+    manager.send(Message(source='test-example',
+                         dest='alice',
+                         content='Hi Alice!'))
+            
+    p = manager._actors[address] 
     assert p.count == 1
     print('Good test!')    
 
-# test_example()
+test_example()
 
 # -----------------------------------------------------------------------------
 # When you're finished, move on to 'manager.py'.

@@ -15,7 +15,7 @@
 # concern.
 
 from dataclasses import dataclass
-
+import sys
 # -- Copied from actors.py (you must modify)
 
 @dataclass
@@ -28,7 +28,7 @@ class Actor:
     def __del__(self):
         print(f'{self} is going away')
         
-    def handle_message(self, msg: Message):
+    def handle_message(self, msg: Message, manager: 'Manager'):
         raise NotImplementedError("Actors must implement handle_message()")
     
 class Manager:
@@ -37,7 +37,7 @@ class Manager:
 
     def send(self, msg: Message):
         if msg.dest in self._actors:
-            self._actors[msg.dest].handle_message(msg)
+            self._actors[msg.dest].handle_message(msg, self)
 
     def spawn(self, address: str, actor: Actor) -> str:
         self._actors[address] = actor
@@ -56,7 +56,7 @@ class Manager:
 
 # An actor that prints
 class Printer(Actor):
-    def handle_message(self, msg: Message):
+    def handle_message(self, msg: Message, manager: 'Manager'):
         print(f'{msg.dest}: {msg.source} said : {msg.content}')
 
 # An actor that counts up/down
@@ -64,22 +64,22 @@ class Counter(Actor):
     def __init__(self):
         self.count = 0
 
-    def handle_message(self, msg: Message):
+    def handle_message(self, msg: Message, manager):
         if msg.content == 'up':
             self.count += 1
         elif msg.content == 'down':
             self.count -= 1
         elif msg.content == 'display':
             # Stuck.  How do I make this work?
-            send(Message(dest='printer',    # FIXME
+            manager.send(Message(dest='printer',    # FIXME
                          source=msg.dest,
                          content=str(self.count)))
 
 # An actor that creates Counter actors
 class CounterFactory(Actor):
-    def handle_message(self, msg: Message):
+    def handle_message(self, msg: Message, manager: 'Manager'):
         # Create a new Counter. But how?!?!?
-        spawn(msg.content, Counter())       # FIXME
+        manager.spawn(msg.content, Counter())       # FIXME
             
 def send_example():
     m = Manager()
@@ -111,8 +111,8 @@ def send_example():
     print('Deleting the manager. All of the actors should go away now')
     del m
     print('You should have seen three "going away" messages above.')
-
-# send_example()
+sys.setrecursionlimit(100000)
+send_example()
 
 # -----------------------------------------------------------------------------
 # Exercise 8 - The self-send
@@ -131,17 +131,17 @@ class CountToN(Actor):
     def __init__(self, n):
         self.n = n
 
-    def handle_message(self, msg):
+    def handle_message(self, msg, manager: 'Manager'):
         if msg.content == 'start':
-            send(Message(dest=msg.dest,        # FIXME
+            manager.send(Message(dest=msg.dest,        # FIXME
                          source=msg.dest,
                          content='0'))
         else:
             if int(msg.content) <= self.n:
-                send(Message(dest='printer',   # FIXME
+                manager.send(Message(dest='printer',   # FIXME
                              source=msg.dest,
                              content=msg.content))
-                send(Message(dest=msg.dest,    # FIXME
+                manager.send(Message(dest=msg.dest,    # FIXME
                              source=msg.dest,
                              content=str(int(msg.content)+1)))
 
@@ -159,7 +159,7 @@ def count_to_example():
     print('Should have see two "going away" messages above')
 
 # Uncomment
-# count_to_example()
+count_to_example()
 
 # -----------------------------------------------------------------------------
 # Bonus:
