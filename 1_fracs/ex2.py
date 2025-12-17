@@ -65,7 +65,6 @@ def test_frac():
     assert (numerator(c), denominator(c)) == (-3, 4)
 
     d = add_frac(a, b)
-    print(numerator(d))
     assert (numerator(d), denominator(d)) == (17, 12)
 
     e = sub_frac(a, b)

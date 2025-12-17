@@ -37,7 +37,12 @@ class Manager:
         
     def send(self, msg: Message):
         if msg.dest in self._actors:
-            self._actors[msg.dest].handle_message(msg)
+            try:
+                self._actors[msg.dest].handle_message(msg)
+                if isinstance(msg, ActorCancel):
+                    raise ActorExit('Cancelled by manager')
+            except ActorExit:
+                del self._actors[msg.dest]
 
     def spawn(self, address: str, actor: Actor) -> str:
         self._actors[address] = actor
@@ -46,8 +51,14 @@ class Manager:
     # You're going to implement this (and may change other parts of the class)
     def cancel(self, address: str):
         # TODO
-        ...
+        self.send(ActorCancel(source='',
+                              dest=address,
+                              content=''))
+class ActorExit(Exception):
+    pass
 
+class ActorCancel(Message):
+    pass
 # -----------------------------------------------------------------------------
 # Exercise 9
 #
@@ -70,14 +81,14 @@ class SelfCancel(Actor):
     def handle_message(self, msg: Message):
         if self.n == 0:
             # Cancel myself. Somehow.
-            assert False, 'TODO'
+           raise ActorExit('Self-cancelling')  
         else:
             self.n -= 1
             print('Received:', msg)
 
 class OtherCancel(Actor):
     def handle_message(self, msg: Message):
-        if cancelled:          # MUST FIX
+        if isinstance(msg, ActorCancel):          # MUST FIX
             print('I was cancelled')
         else:
             print('Received:', msg)

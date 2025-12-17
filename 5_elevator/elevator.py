@@ -80,7 +80,47 @@ Use your intuition and your experience as a user of an elevator.
 Also, try to build your initial understanding of the problem at a high
 level without immediately jumping into code.  Code can come later.
 '''
+class ElevatorLogic:
+      floor_count = 2
+      states = ('IDLE', 'MOVING_UP', 'MOVING_DOWN', 'BOARDING_UP', 'BOARDING_DOWN', 'UNLOADING')
+      events = ('FLOOR_1_UP', 'FLOOR_2_DOWN', 'GO_TO_FLOOR_1', 'GO_TO_FLOOR_2')
+      def __init__(self):
+          self.current_floor = 0
+          self.direction = 1  # 1 for up, -1 for down
+          self.state = 'IDLE'
+      def handle_event(self, event):
+          # evevator logic depends on current state and event
+          # also need to have a queue of requests somewhere
+            if event == 'GO_TO_FLOOR_1':
+               self.current_floor = 0
+               self.state = 'UNLOADING'
+            elif event == 'GO_TO_FLOOR_2':
+               self.current_floor = 1
+               self.state = 'UNLOADING'
+            elif event == 'FLOOR_1_UP':
+               if self.direction == 1:
+                     self.state = 'MOVING_UP'
+               else:
+                     self.state = 'MOVING_DOWN'
+            elif event == 'FLOOR_2_DOWN':
+               if self.direction == -1:
+                     self.state = 'MOVING_DOWN'
+               else:
+                     self.state = 'MOVING_UP'
 
-
-
-
+def test_elevator_logic():
+      elevator = ElevatorLogic()
+      # Test going to floor 2
+      elevator.handle_event('GO_TO_FLOOR_2')
+      assert elevator.current_floor == 1
+      assert elevator.state == 'UNLOADING'
+      # Test going to floor 1
+      elevator.handle_event('GO_TO_FLOOR_1')
+      assert elevator.current_floor == 0
+      assert elevator.state == 'UNLOADING'
+      # Test floor 1 up request
+      elevator.handle_event('FLOOR_1_UP')
+      assert elevator.state in ('MOVING_UP', 'MOVING_DOWN')
+      # Test floor 2 down request
+      elevator.handle_event('FLOOR_2_DOWN')
+      assert elevator.state in ('MOVING_UP', 'MOVING_DOWN')
