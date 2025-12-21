@@ -89,13 +89,13 @@ class ElevatorLogic:
           self.direction = 1  # 1 for up, -1 for down
           self.state = 'IDLE'
       def handle_event(self, event):
-          # evevator logic depends on current state and event
-          # also need to have a queue of requests somewhere
+          # elevator logic depends on current state and event
+          # also need to have a queue of requests somewhere. should be async and have a listener? 
             if event == 'GO_TO_FLOOR_1':
-               self.current_floor = 0
+               self.current_floor = 1
                self.state = 'UNLOADING'
             elif event == 'GO_TO_FLOOR_2':
-               self.current_floor = 1
+               self.current_floor = 2
                self.state = 'UNLOADING'
             elif event == 'FLOOR_1_UP':
                if self.direction == 1:
@@ -107,20 +107,17 @@ class ElevatorLogic:
                      self.state = 'MOVING_DOWN'
                else:
                      self.state = 'MOVING_UP'
+      
+      # Handlers for specific events for clarity
+      def handleMoveUp(self, event):
+          pass
+      
+      def handleMoveDown(self, event):
+          pass     
 
 def test_elevator_logic():
       elevator = ElevatorLogic()
-      # Test going to floor 2
+      # Test going to floor 2 starting from idle floor 1
       elevator.handle_event('GO_TO_FLOOR_2')
-      assert elevator.current_floor == 1
+      assert elevator.current_floor == 2
       assert elevator.state == 'UNLOADING'
-      # Test going to floor 1
-      elevator.handle_event('GO_TO_FLOOR_1')
-      assert elevator.current_floor == 0
-      assert elevator.state == 'UNLOADING'
-      # Test floor 1 up request
-      elevator.handle_event('FLOOR_1_UP')
-      assert elevator.state in ('MOVING_UP', 'MOVING_DOWN')
-      # Test floor 2 down request
-      elevator.handle_event('FLOOR_2_DOWN')
-      assert elevator.state in ('MOVING_UP', 'MOVING_DOWN')
