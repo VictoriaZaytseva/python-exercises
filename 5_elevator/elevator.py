@@ -82,32 +82,73 @@ level without immediately jumping into code.  Code can come later.
 '''
 class ElevatorLogic:
       floor_count = 2
-      states = ('IDLE', 'MOVING_UP', 'MOVING_DOWN', 'BOARDING_UP', 'BOARDING_DOWN', 'UNLOADING')
-      events = ('FLOOR_1_UP', 'FLOOR_2_DOWN', 'GO_TO_FLOOR_1', 'GO_TO_FLOOR_2')
+      states = ('IDLE', 
+                'MOVING_UP', 
+                'MOVING_DOWN', 
+                'BOARDING_UP', 
+                'BOARDING_DOWN', 
+                'UNLOADING')
+      
+      events = ("CALLED_UP_FLOOR_n", "CALLED_DOWN_FLOOR_n",
+                "GO_TO_FLOOR_n", "ARRIVED_AT_FLOOR_n",
+                "BOARDING_COMPLETE")
+      
+      state = IDLE
+
       def __init__(self):
           self.current_floor = 0
           self.direction = 1  # 1 for up, -1 for down
           self.state = 'IDLE'
+          self.destination_floors = set()
+          # TODO some kind of request queue?
+          self.request_queue = []
+          
+      # Checking for things that should never happen    
+      def invariants(self):
+          # Elevator should never move with doors open
+          if self.state in ['BOARDING_UP', 'BOARDING_DOWN', 'UNLOADING']:
+              assert self.direction == 0, "Elevator moving with doors open!"
+          # Elevator should never move up when at top floor
+          if self.current_floor == self.floor_count - 1:
+              assert self.direction != 1, "Elevator moving up at top floor!"
+          # Elevator should never move down when at bottom floor
+          if self.current_floor == 0:
+              assert self.direction != -1, "Elevator moving down at bottom floor!"
+
       def handle_event(self, event):
           # elevator logic depends on current state and event
           # also need to have a queue of requests somewhere. should be async and have a listener? 
-            if event == 'GO_TO_FLOOR_1':
-               self.current_floor = 1
-               self.state = 'UNLOADING'
-            elif event == 'GO_TO_FLOOR_2':
-               self.current_floor = 2
-               self.state = 'UNLOADING'
-            elif event == 'FLOOR_1_UP':
-               if self.direction == 1:
-                     self.state = 'MOVING_UP'
-               else:
-                     self.state = 'MOVING_DOWN'
-            elif event == 'FLOOR_2_DOWN':
-               if self.direction == -1:
-                     self.state = 'MOVING_DOWN'
-               else:
-                     self.state = 'MOVING_UP'
-      
+          # actor mailbox. how to implement idk T_T
+          # maybe start next request after finishing some of the current ones
+          # but what about interruptions, some request should get priority...
+          # pull request into queue based on current state...
+         if event.startswith('CALLED_UP_FLOOR_'):
+            if(self.state == 'IDLE'):
+               self.state = 'MOVING_UP'
+            else:
+               floor = int(event.split('_')[-1])
+               self.request_queue.append((floor, 1))  # if elevator is not idle add to request queue
+         elif event.startswith('CALLED_DOWN_FLOOR_'):
+            if(self.state == 'IDLE'):
+               self.state = 'MOVING_DOWN'
+            else:
+               floor = int(event.split('_')[-1])
+               self.request_queue.append((floor, -1))  # -1 for down
+         elif event.startswith('GO_TO_FLOOR_'):
+             # elevator should be in boarding state and the button that is pressed should match the direction
+             # this is hell
+             # so many combinations of states and events
+            if(self.state in ['BOARDING_UP', 'BOARDING_DOWN', 'UNLOADING']):
+                 floor = int(event.split('_')[-1])
+                 self.destination_floors.add(floor)
+            else:
+              # if not boarding and button pushed add to destination floors 
+              # move to floors that are matching the directions first, after all complete, switch directions   
+               floor = int(event.split('_')[-1])
+               self.destination_floors.add(floor)
+         self.invariants      
+
+
       # Handlers for specific events for clarity
       def handleMoveUp(self, event):
           pass
@@ -115,9 +156,98 @@ class ElevatorLogic:
       def handleMoveDown(self, event):
           pass     
 
+
+# TODO: split elevator class into several classes similar to actor with different behaviors.
+# to do add more behaviors for each state.
+class IDLE:
+      def handle_destination_button(self, floor):
+         pass
+      def handle_up_call_button(self, floor):
+         pass
+      def handle_down_call_button(self, floor):
+         pass
+      def handle_door_close(self):
+         pass
+      def handle_arrival(self, floor):
+         pass
+class MOVING_UP:
+      def handle_destination_button(self, floor):
+         pass
+      def handle_up_call_button(self, floor):
+         pass
+      def handle_down_call_button(self, floor):
+         pass
+      def handle_door_close(self):
+         pass
+      def handle_arrival(self, floor):
+         pass
+class MOVING_DOWN:
+      def handle_destination_button(self, floor):
+         pass
+      def handle_up_call_button(self, floor):
+         pass
+      def handle_down_call_button(self, floor):
+         pass
+      def handle_door_close(self):
+         pass
+      def handle_arrival(self, floor):
+         pass
+class BOARDING_UP:
+      def handle_destination_button(self, floor):
+         pass
+      def handle_up_call_button(self, floor):
+         pass
+      def handle_down_call_button(self, floor):
+         pass
+      def handle_door_close(self):
+         pass
+      def handle_arrival(self, floor):
+         pass
+class BOARDING_DOWN:
+      def handle_destination_button(self, floor):
+         pass
+      def handle_up_call_button(self, floor):
+         pass
+      def handle_down_call_button(self, floor):
+         pass
+      def handle_door_close(self):
+         pass
+      def handle_arrival(self, floor):
+         pass
+class UNLOADING:
+      def handle_destination_button(self, floor):
+         pass
+      def handle_up_call_button(self, floor):
+         pass
+      def handle_down_call_button(self, floor):
+         pass
+      def handle_door_close(self):
+         pass
+      def handle_arrival(self, floor):
+         pass
+
 def test_elevator_logic():
+      
       elevator = ElevatorLogic()
       # Test going to floor 2 starting from idle floor 1
       elevator.handle_event('GO_TO_FLOOR_2')
       assert elevator.current_floor == 2
       assert elevator.state == 'UNLOADING'
+
+# can try every possible event sequence breadth-first search
+def test_random_events():
+      import random
+      elevator = ElevatorLogic()
+      events = [
+          'CALLED_UP_FLOOR_0',
+          'CALLED_DOWN_FLOOR_1',
+          'GO_TO_FLOOR_0',
+          'GO_TO_FLOOR_1',
+          'ARRIVED_AT_FLOOR_0',
+          'ARRIVED_AT_FLOOR_1',
+          'BOARDING_COMPLETE'
+      ]
+      for _ in range(100):
+          event = random.choice(events)
+          elevator.handle_event(event)
+          elevator.invariants()      
