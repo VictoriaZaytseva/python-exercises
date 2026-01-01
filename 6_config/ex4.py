@@ -22,8 +22,8 @@ def matching_predicate(predicate):
 # Using this code generator, show how you could define `parse_integer`
 # and `parse_name` directly without the need for an extra wrapper layer.
 
-parse_integer = matching_predicate(...)
-parse_name = matching_predicate(...)
+parse_integer = matching_predicate(str.isdigit)
+parse_name = matching_predicate(str.isalpha)
 
 # Your task: Fill in the missing pieces (...) to make this work.  All
 # the tests from exercise 3 should still work.
@@ -39,7 +39,16 @@ assert parse_name("123", 0) == None                # No match
 assert parse_name('', 0) == None                   # No match (must be at least one letter)
 
 def parse_setting(text, index):
-    ... # Copy your code from exercise 3 (unmodified)
+    value = text.strip().rstrip(';').split('=')
+    if(len(value) !=2 or not text.strip().endswith(';')):
+        return None
+    else:
+        if(value[1].isdigit()):
+            parsed_int = parse_integer(value[1], index)
+            return (value[0], int(parsed_int[0])), index + len(text)
+        else:
+            parsed_str = parse_name(value[1], index)
+            return (value[0], parsed_str[0]), index + len(text)
 
 def test_parse_setting():
     assert parse_setting("name=42;", 0) == (('name', 42), 8)
@@ -47,15 +56,27 @@ def test_parse_setting():
     assert parse_setting("xyz 2", 0) == None         # Missing '='
     assert parse_setting("a=42", 0) == None          # Missing ';' at end
 
-# test_parse_setting()      # Uncomment
+test_parse_setting()      # Uncomment
 
 def parse_settings(text, index):
-    ... # Copy your code from exercise 3 (unmodified)
+    result = [x+';' for x in text.split(';')]
+    result.pop()
+    settings = {}
+    curr_index = index
+    for item in result:
+        parsed = parse_setting(item, 0)
+        if parsed is not None:
+            key, value = parsed[0]
+            settings[key] = value
+            curr_index += parsed[1]
+        else:
+            break
+    return settings, curr_index
 
 def test_parse_settings():
     assert parse_settings("a=123;b=42;size=99;", 0) == ( {'a': 123, 'b': 42, 'size': 99}, 19)
     assert parse_settings("", 0) == ({ }, 0)
     assert parse_settings("a=123;b 42;", 0) == ({ 'a': 123 }, 6)
     
-# test_parse_settings()    # Uncomment
+test_parse_settings()    # Uncomment
 

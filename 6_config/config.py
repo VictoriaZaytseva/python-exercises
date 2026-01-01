@@ -72,8 +72,20 @@ assert parse_name('', 0) == None                   # No match (must be at least 
 # will also be returned.  If there is any error in the format (such as
 # a missing semicolon), the function should return None.
 
+
 def parse_setting(text, index):
-    ... # You define using the parse_integer() and parse_name() functions above
+
+    value = text.strip().rstrip(';').split('=')
+    if(len(value) !=2 or not text.strip().endswith(';')):
+        return None
+    else:
+        if(value[1].isdigit()):
+            parsed_int = parse_integer(value[1], index)
+            return (value[0], int(parsed_int[0])), index + len(text)
+        else:
+            parsed_str = parse_name(value[1], index)
+            return (value[0], parsed_str[0]), index + len(text)
+    # You define using the parse_integer() and parse_name() functions above
 
 def test_parse_setting():
     assert parse_setting("name=42;", 0) == (('name', 42), 8)
@@ -81,7 +93,7 @@ def test_parse_setting():
     assert parse_setting("xyz 2", 0) == None         # Missing '='
     assert parse_setting("a=42", 0) == None          # Missing ';' at end
 
-# test_parse_setting()             # Uncomment
+test_parse_setting()             # Uncomment
 
 # -----------------------------------------------------------------------------
 # Exercise 2 - The Repetitive
@@ -107,14 +119,27 @@ def test_parse_setting():
 # into a dict using the dict([('a',123), (b', 42), ...]).
 
 def parse_settings(text, index):
-    ... # You define
+    result = [x+';' for x in text.split(';')]
+    result.pop()
+    settings = {}
+    curr_index = index
+    for item in result:
+        parsed = parse_setting(item, 0)
+        if parsed is not None:
+            key, value = parsed[0]
+            settings[key] = value
+            curr_index += parsed[1]
+        else:
+            break
+    return settings, curr_index
 
 def test_parse_settings():
+    print(parse_settings("a=123;b=42;size=99;", 0))
     assert parse_settings("a=123;b=42;size=99;", 0) == ( {'a': 123, 'b': 42, 'size': 99}, 19)
     assert parse_settings("", 0) == ({ }, 0)
     assert parse_settings("a=123;b 42;", 0) == ({ 'a': 123 }, 6)
 
-# test_parse_settings()       # Uncomment
+test_parse_settings()       # Uncomment
 
 # Proceed to ex3.py when finished.
 
