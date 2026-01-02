@@ -15,7 +15,10 @@ from ex4 import parse_integer, parse_name
 
 def match_literal(literal):
     def parse(text, index):
-        ... # You define
+        if index >= len(text) or text[index] != literal:
+            return None
+        else:
+            return(text[index], index + 1)
     return parse
 
 # Examples
@@ -36,10 +39,22 @@ test_parse_literal()
 # fail, the function should return None.
 
 def parse_setting(text, index):
-    ... # You define.
-
+    if not(m := parse_name(text, index)):
+        return None
+    name, index = m
+    if not(m := parse_equal(text, index)):
+        return None
+    _, index = m
+    if not(m := parse_integer(text, index)):
+        return None
+    value, index = m
+    if not(m := parse_semi(text, index)):
+        return None
+    _, index = m
+    return (name, int(value)), index
     
 def test_parse_setting():
+    print(parse_setting("name=42;", 0))
     assert parse_setting("name=42;", 0) == (('name', 42), 8)
     assert parse_setting("x", 0) == None
     assert parse_setting("xyz 2", 0) == None         # Missing '='
@@ -47,5 +62,5 @@ def test_parse_setting():
     assert parse_setting("42", 0) == None
     assert parse_setting("name=name",0) == None
     
-# test_parse_setting()     # Uncomment
+test_parse_setting()     # Uncomment
 
