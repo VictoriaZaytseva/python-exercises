@@ -28,7 +28,8 @@ from ex9 import zero_or_more
 # 1. How do you go about matching optional whitespace?  Can it
 #    be done using existing functions such as matching_predicate()?
 
-whitespace = ...  # You define
+whitespace = reduce(zero_or_more(matching_predicate(str.isspace)),
+                     ''.join)
 
 def test_whitespace():
     assert whitespace("   ", 0) == ("   ", 3)
@@ -46,13 +47,13 @@ test_whitespace()
 #    choice(), sequence(), and reduce()?
 
 def token(parser):
-    ... # You define
+    return reduce(sequence(whitespace, parser), lambda r: r[1])
 
 def test_token():
     assert token(parse_integer)("123", 0) == ('123', 3)
     assert token(parse_integer)("    123", 0) == ('123', 7)   # Leading whitespace ignored
 
-# test_token()   # Uncomment.
+test_token()   # Uncomment.
 
 # 3. Can whitespace handling be merged with an existing function
 #    like sequence() in some way?   Can you do this in a way
@@ -64,10 +65,11 @@ def test_token():
 #    with the token operation above.
 
 def tokenize(*parsers):
-    ... # You define
+    return sequence(*[token(p) for p in parsers])
 
-parse_setting = ... # You define
-parse_settings = ... # You define
+parse_setting = reduce(tokenize(parse_name, parse_equal, parse_converted_number, parse_semi),
+                       lambda r: (r[0], r[2]))
+parse_settings = reduce(zero_or_more(parse_setting), dict)
 
 def test_parse_settings_final():
     text = """
@@ -76,5 +78,4 @@ def test_parse_settings_final():
     maxspeed = 1000;
     """
     assert parse_settings(text, 0) == ({'speed':42, 'size':9.5, 'maxspeed':1000}, 62)
-
-# test_parse_settings_final()     # Uncomment
+test_parse_settings_final()     # Uncomment

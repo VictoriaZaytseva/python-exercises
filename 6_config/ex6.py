@@ -17,7 +17,13 @@ from ex5 import parse_name, parse_integer, parse_equal, parse_semi
 
 def sequence(*parsers):
     def parse(text, index):
-        ...
+        parts = []
+        for parser in parsers:
+            if not(m := parser(text, index)):
+                return None
+            part, index = m
+            parts.append(part)
+        return (parts, index)
     return parse
 
 # Try combining the earlier rules into a sequence
@@ -28,7 +34,7 @@ def test_match_setting():
     assert match_setting("x=42", 0) == None     # Missing ;
     assert match_setting("x 42", 0) == None     # Missing =
 
-# test_match_setting()     # Uncomment
+test_match_setting()     # Uncomment
 
 # Commentary: The `match_setting()` function is not quite the same
 # as the previous `parse_setting()` function.   For one, it doesn't

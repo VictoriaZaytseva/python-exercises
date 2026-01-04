@@ -29,7 +29,12 @@ from ex5 import match_literal
 
 def reduce(parser, func):
     def parse(text, index):
-        ... # You define
+       if not (m := parser(text, index)):
+           return None
+       else:
+           print(m)
+           matched, next_index = m
+           return (func(matched), next_index)
     return parse
 
 # Here's an example showing how reduce() might work with integers.
@@ -41,7 +46,8 @@ assert reduce(parse_integer, int)('123',0) == (123, 3)
 # `sequence()`.  Show that it passes all of the earlier tests.
 # Hint: Use of a lambda function might be useful here.
 
-parse_setting = reduce(sequence(...), ...)  # You define
+parse_setting = reduce(sequence(parse_name, parse_equal, parse_integer, parse_semi),
+                       lambda r: (r[0], int(r[2])))  # You define
 
 def test_parse_setting():
     assert parse_setting("name=42;", 0) == (('name', 42), 8)
@@ -49,17 +55,17 @@ def test_parse_setting():
     assert parse_setting("xyz 2", 0) == None         # Missing '='
     assert parse_setting("a=42", 0) == None          # Missing ';' at end
 
-# test_parse_setting()       # Uncomment
+test_parse_setting()       # Uncomment
 
 # Challenge: Show how you can use a combination of reduce,
 # parse_integer(), and sequence to parse a decimal number.  A decimal
 # number consists of a series of digits, decimal point (.) and more
 # digits.
 
-parse_decimal = ... # You define
+parse_decimal = reduce(sequence(parse_integer, match_literal('.'), parse_integer), ''.join)
 
 def test_parse_decimal():
     assert parse_decimal("123.45", 0) == ("123.45", 6)
     assert parse_decimal("123", 0) == None
 
-# test_parse_decimal()     # Uncomment
+test_parse_decimal()     # Uncomment

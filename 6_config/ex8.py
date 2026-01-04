@@ -15,7 +15,9 @@ from ex7 import (parse_name, parse_integer, parse_decimal, parse_equal, parse_se
 
 def choice(*parsers):
     def parse(text, index):
-        ...  # You define
+        for parser in parsers:
+            if m := parser(text, index):
+                return m
     return parse
 
 # Here's an example that shows how to use choice() to parse either a
@@ -35,19 +37,21 @@ test_parse_number()
 # and parse_decimal() functions to convert numeric values into an appropriate
 # Python type while parsing.
 
-parse_converted_number = ... # You define
+parse_converted_number = reduce(parse_number,
+                              lambda v: float(v) if '.' in v else int(v))  #
 
 def test_parse_converted_number():
     assert parse_converted_number("1234", 0) == (1234, 4)      # Note: int
     assert parse_converted_number("12.34", 0) == (12.34, 5)    # Note: float
     assert parse_converted_number("abc", 0) == None
 
-# test_parse_converted_number()   # Uncomment
+test_parse_converted_number()   # Uncomment
 
 # Define a more powerful version of parse_setting() that handles both
 # kinds of numbers.
 
-parse_setting = ... # You define
+parse_setting = reduce(sequence(parse_name, parse_equal, parse_converted_number, parse_semi),
+                       lambda r: (r[0], r[2]))
 
 # New test, with different numeric types and conversion
 def test_parse_setting():
@@ -57,4 +61,4 @@ def test_parse_setting():
     assert parse_setting("x=42", 0) == None   # Missing ;
     assert parse_setting("x=y;", 0) == None   # y is not a number
 
-# test_parse_setting()   # Uncomment
+test_parse_setting()   # Uncomment
