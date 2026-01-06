@@ -12,3 +12,4 @@ def greeting():
 
 # How do you use the greeting() function with the after() function?
 # That is, have the after() function call greeting() after 10 seconds.
+after(10, greeting)

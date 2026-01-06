@@ -80,14 +80,14 @@ def add(x, y):    # You are NOT allowed to change this function
 
 
 # You must fix each of these to work correctly.  Uncomment each line.
-# after_1(1, add(2,3))        # FIX
-# after_1(1, add(x=2, y=3))   # FIX. Must keep kwargs
+after_1(1, lambda: add(2,3))        # FIX
+after_1(1, lambda:add(x=2, y=3))   # FIX. Must keep kwargs
 
-# after_2(1, add(2,3))        # FIX
-# after_2(1, add(x=2, y=3))   # FIX. Must keep kwargs
+after_2(1, add, args=(2,3))        # FIX
+after_2(1, add, kwargs={'x':2, 'y':3})   # FIX. Must keep kwargs
 
-# after_3(1, add(2,3))        # FIX
-# after_3(1, add(x=2, y=3))   # FIX. Must keep kwargs
+after_3(1, add, 2, 3)        # FIX
+after_3(1, add, x=2, y=3)   # FIX. Must keep kwargs
 
 # -----------------------------------------------------------------------------
 # Part 2: 
@@ -107,10 +107,12 @@ def add(x, y):    # You are NOT allowed to change this function
 # Make these work.  Note: Our focus here is on the "after_" function,
 # not on the add() function.
 
-# after_2(1, after_2(1, add(2,3)))                 # FIX
-# after_2(1, after_2(seconds=1, func=add(2,3)))    # FIX. Must use kwargs for seconds/func
+#after_2(1, after_2, args=(1, lambda: add(2,3)))                 # FIX
 
-# after_3(1, after_3(1, add(2, 3)))                # FIX.
+#after_2(1, after_2, kwargs={'seconds':1, 'func':lambda: add(2, 3)})
+
+after_3(1, after_3, 1, add, 2, 3)                # FIX.
+        #after_3(1, add(2, 3)))                # FIX.
 # after_3(1, after_3(seconds=1, func=add(2,3)))    # FIX. Must use kwargs for seconds/func
 
 
@@ -122,9 +124,10 @@ def add(x, y):    # You are NOT allowed to change this function
 # think Mary should do something different than any of the proposed
 # solutions, code that instead.  In all cases, be prepared to explain
 # your reasoning when you unleash this code on your coworkers...
-
+# number 1 is the best
 def after(seconds, func):
     # Final implementation.  You decide what it is.
-    ...
+    time.sleep(seconds)
+    return func()
 
 

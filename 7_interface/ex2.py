@@ -16,8 +16,11 @@ def add(x, y):
     return x + y
 
 # This doesn't work. Why?  Can you modify it to make it work?
-result = after(10, add(2, 3))
+result = after(10, func = lambda: add(2, 3))
+# python has a partial function? :O 
+import functools
 
+result = after(10, functools.partial(add, 2, 3))
 # -----------------------------------------------------------------------------
 # Thought Experiment:
 #
@@ -29,4 +32,4 @@ result = after(10, add(2, 3))
 # Before you begin, what is this operation even doing?  What
 # behavior do you expect to see?
 
-# result = after(5, add(add(1,2), add(3,4)))    # Must modify!
+result = after(5, func=lambda: add(add(1,2), add(3,4)))    # Must modify!

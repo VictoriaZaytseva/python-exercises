@@ -63,12 +63,11 @@ def after_2(seconds, func):
 # Your task is to try the two examples from earlier with these
 # functions and observe the results.   Do you have a preferred
 # version?
-
-# >>> after_1(1, lambda: math.sqrt(-1))
-# >>> after_1(-1, lambda: math.sqrt(1))
+#after_1(1, lambda: math.sqrt(-1))
+#after_1(-1, lambda: math.sqrt(1))
 #
-# >>> after_2(1, lambda: math.sqrt(-1))
-# >>> after_2(-1, lambda: math.sqrt(1))
+#after_2(1, lambda: math.sqrt(-1))
+#after_2(-1, lambda: math.sqrt(1))
 
 # -----------------------------------------------------------------------------
 # Part 2:
@@ -76,11 +75,11 @@ def after_2(seconds, func):
 # A common programming mistake is to forget the lambda.  Try the
 # following examples and observe the behavior
 #
-# >>> after_1(1, math.sqrt(1))
-# >>> after_1(1, math.sqrt(-1))
+#after_1(1, math.sqrt(1))
+#after_1(1, math.sqrt(-1))
 #
-# >>> after_2(1, math.sqrt(1))
-# >>> after_2(1, math.sqrt(-1))
+#after_2(1, math.sqrt(1))
+after_2(1, math.sqrt(-1))
 #
 # Do you have a preferred version?
 
