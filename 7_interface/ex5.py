@@ -44,10 +44,15 @@ class Result:
 import time
 
 def after(seconds:float, func) -> Result:
+    if seconds < 0:
+        return Result(exc=ValueError("seconds must be non-negative"))
     time.sleep(seconds)
     # You implement this 
-    ... 
-    return Result(...)
+    try:
+        result = func()
+        return Result(value=result)
+    except Exception as e:
+        return Result(exc=e)
 
 # Example
 def add(x, y):
@@ -67,7 +72,7 @@ def test():
         print('Good!')
 
 # Uncomment to test
-# test()
+test()
 
 # -----------------------------------------------------------------------------
 # Part 2
@@ -79,9 +84,9 @@ import math
 
 # Try the following failure scenarios with your new after() function
 #
-# >>> r = after(1, lambda: math.sqrt(-1))   
-# >>> r = after(-1, lambda: math.sqrt(1))
-# >>> r = after(1, math.sqrt(-1))
+r = after(1, lambda: math.sqrt(-1))   
+r = after(-1, lambda: math.sqrt(1))
+r = after(1, math.sqrt(-1))
 #
 # Ponder: Is the implementation clearly separating all of these
 # failure cases?

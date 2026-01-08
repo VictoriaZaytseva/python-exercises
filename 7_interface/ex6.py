@@ -9,6 +9,7 @@
 # For example:
 
 class Result:
+    __match_args__ = ('_value',)
     def __init__(self, value):
         self._value = value
 
@@ -33,10 +34,16 @@ class Error(Result):
 import time
 
 def after(seconds:float, func) -> Result:
-    time.sleep(seconds)
-    # You implement this 
-    ... 
-    return Ok(...) or Error(...)
+    if(seconds < 0):
+        return Error(ValueError("seconds must be non-negative"))
+    else:
+        time.sleep(seconds)
+        # You implement this 
+        try:
+            result = func()
+            return Ok(result)
+        except Exception as e:
+            return Error(e)
 
 def test_after():
     def add(x, y):
@@ -47,7 +54,7 @@ def test_after():
     r = after(1, lambda: add(2, "three"))
     assert isinstance(r, Error), "Should have returned Error"
 
-# test_after()     # Uncomment
+test_after()     # Uncomment
 
 # -----------------------------------------------------------------------------
 # Part 2:
@@ -66,9 +73,9 @@ def f(delay, value):
 
 # Try these examples:
 #
-# >>> f(1, 1)
-# >>> f(1, -1)
-# >>> f(-1, 1)
+f(1, 1)
+f(1, -1)
+f(-1, 1)
 #
 
 # -----------------------------------------------------------------------------
@@ -87,8 +94,8 @@ def g(delay, value):
 
 # Try the above function to see what happens
 #
-# >>> g(1, 1)
-# >>> g(1, -1)
+g(1, 1)
+g(1, -1)
 #
 # Okay, it doesn't quite work.  However, it can be made to work if
 # you add a `__match_args__` attribute to the `Result` class like this:
@@ -119,12 +126,12 @@ def h(delay, value):
 
 # Try the above code with these examples:
 #
-# >>> h(1, 1)
-# >>> h(1, -1)
-# >>> h(1, "one")
-# >>> h(-1, 1)
-# >>> del math
-# >>> h(1, 1)
+h(1, 1)
+h(1, -1)
+h(1, "one")
+h(-1, 1)
+del math
+h(1, 1)
 #
 
 # -----------------------------------------------------------------------------

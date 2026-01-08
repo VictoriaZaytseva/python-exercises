@@ -41,11 +41,12 @@ assert chained(2) == 576
 def chained_after(x:int) -> int:
     from ex6 import after, Result, Ok, Error
     a = after(1, A(x))     # Call a = A(x) after 1 second   (must modify)
-    b = after(2, B(a))     # Call b = B(a), 2 seconds after that (must modify)
-    c = after(3, C(b))     # Call c = C(b), 3 seconds after that (must modify)
+    b = after(2, B(a.unwrap()))     # Call b = B(a), 2 seconds after that (must modify)
+    c = after(3, C(b.unwrap()))     # Call c = C(b), 3 seconds after that (must modify)
     return c
-
-# assert chained_after(2) == 576        # Uncomment
+print("Starting chained after...")
+print("Result:", chained_after(2).unwrap())  # Uncomment
+assert chained_after(2).unwrap() == 576        # Uncomment
 
 # One problem with the chaining is that everything gets very messy
 # once `Result` objects enter the mix.  For example, the result of
