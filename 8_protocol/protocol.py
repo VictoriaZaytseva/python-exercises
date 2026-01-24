@@ -76,7 +76,15 @@ example()
 # Note: You can use json.loads() to convert JSON data into a Python dict.
 
 def recreate_message(msgtype:str, payload:str) -> Message:
-    ...  # You implement
+    match msgtype:
+        case 'ChatMessage':
+            data = json.loads(payload)
+            return ChatMessage(data['playerid'], data['text'])
+        case 'PlayerUpdate':
+            data = json.loads(payload)
+            return PlayerUpdate(data['playerid'], data['x'], data['y'])
+        case _:
+            raise ValueError(f'Unknown message type: {msgtype}')
 
 def test_recreator():
     msg1 = recreate_message('ChatMessage', '{"playerid": "Dave", "text": "Hello World"}')
@@ -113,7 +121,7 @@ def test_recreator():
     # a sensible error handling strategy?
 
 # Uncomment when ready        
-# test_recreator()
+test_recreator()
 
 # -----------------------------------------------------------------------------
 # Exercise 2 - The Receiver
@@ -178,10 +186,14 @@ def receive_message(sock) -> Message:
 
     # --- YOU IMPLEMENT
     # Use receive_line() and receive_exactly() to read a message.
-    ...
-
-    # Create the result message
-    return recreate_message(msgtype, payload)
+    if not (msgtype := receive_line(sock)):
+        return None
+    if not (msgsize := receive_line(sock)):
+        return None
+    if not (payload := receive_exactly(sock, int(msgsize))):
+        return None
+    return recreate_message(msgtype.strip().decode('utf-8'),
+                             payload.decode('utf-8'))
 
 # To test the above function with an actual socket, Arjoon has written
 # a separate program `testmsg.py` which you can find in this same
@@ -216,7 +228,7 @@ def test_receiver():
         p.terminate()
 
 # Uncomment when ready
-# test_receiver()
+test_receiver()
 
 # -----------------------------------------------------------------------------
 # Exercise 3 - Is it testable?

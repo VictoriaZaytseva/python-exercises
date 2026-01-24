@@ -40,10 +40,18 @@ def brute_force():
                         # Enforce additional constraints and throw out bad solutions
                         if baker == 5:
                             continue
-                        ...
+                        if cooper == 1:
+                            continue
+                        if fletcher == 1 or fletcher == 5:
+                            continue
+                        if miller <= cooper:
+                            continue
+                        if abs(smith - fletcher) == 1:
+                            continue
+                        if abs(fletcher - cooper) == 1:
+                            continue
                         # Print a solution
                         print(f'{baker=} {cooper=} {fletcher=} {miller=} {smith=}')
-
 # -----------------------------------------------------------------------------                        
 # Exercise 2 - Developing a better vocabulary
 #
@@ -86,8 +94,23 @@ def brute_force():
 # no obvious way to stick an isolated `continue` statement inside a
 # function.  However, you might be able to emulate the behavior of
 # `continue` with an exception.
+class Fail(Exception):
+    pass
 
-                        
+def require(cond):
+    if not cond:
+        raise Fail()
+
+def forbid(cond):
+    if cond:
+        raise Fail()
+
+def require(*args):
+    if len(set(args)) != len(args):
+        raise Fail()
+def adjacent(a, b):
+    return abs(a - b) == 1    
+    
 # -----------------------------------------------------------------------------
 # Exercise 3 - Separation of Details
 #
@@ -161,7 +184,36 @@ def brute_force():
 # You can create a dictionary from values using
 # `dict(zip(domain.keys(), values))`
 # -----------------------------------------------------------------------------
+def find_solutions(invariants, domain):
+    import itertools
+    for values in itertools.product(*domain.values()):
+        candiate = dict(zip(domain.keys(), values))
+        try:
+            invariants(**candiate)
+            yield candiate
+        except Fail:
+            pass
 
+def apartment(baker, cooper, fletcher, miller, smith):
+    require(set([baker, cooper, fletcher, miller, smith]) == 5)
+    forbid(baker == 5)
+    forbid(cooper == 1)
+    forbid(fletcher == 1 or fletcher == 5)
+    require(miller > cooper)     
+    forbid(adjacent(smith, fletcher))
+    forbid(adjacent(fletcher, cooper))
+
+domain = {
+    'baker': range(1, 6),
+    'cooper': range(1, 6),
+    'fletcher': range(1, 6),
+    'miller': range(1, 6),
+    'smith': range(1, 6)
+}
+
+solutions = find_solutions(apartment, domain)
+for soln in solutions:
+    print(soln)
 # -----------------------------------------------------------------------------
 # Exercise 4 - The Elevator Puzzle
 #
@@ -241,7 +293,31 @@ def all_combinations(values):
 def elevator_spec(mode, floor, destinations, up_requests, down_requests):
     # Write logic rules here
     require(1 <= floor <= 5)
-    ...
+    require(all(1 <= d <= 5 for d in destinations))
+    require(all(1 <= u <= 4 for u in up_requests))
+    require(all(2 <= d <= 5 for d in down_requests))
+    if mode == 'IDLE':
+        require(len(destinations) + len(up_requests) + len(down_requests) == 0)
+    elif mode == 'MOVINGUP':
+        require(floor < 5)
+        require(any(d > floor for d in destinations) or
+                any(u > floor for u in up_requests) or
+                any(d > floor for d in down_requests))
+    elif mode == 'MOVINGDOWN':
+        require(floor > 1)
+        require(any(d < floor for d in destinations) or
+                any(u < floor for u in up_requests) or
+                any(d < floor for d in down_requests))
+    elif mode == 'LOADINGUP':
+        require(floor < 5)
+        require(floor not in up_requests)
+    elif mode == 'LOADINGDOWN':
+        require(floor > 1)
+        require(floor not in down_requests)
+    elif mode == 'UNLOADING':
+        require(len(destinations) + len(up_requests) + len(down_requests) == 0)
+    else:
+        forbid(True)   # Invalid mode
 
 elevator_domain = {
     'mode' : { 'IDLE', 'MOVINGUP', 'MOVINGDOWN', 'LOADINGUP', 'LOADINGDOWN', 'UNLOADING' },
@@ -253,8 +329,8 @@ elevator_domain = {
 
 
 # How many solutions are there?  Uncomment
-# elevators = list(find_solutions(elevator_spec, elevator_domain))
-# print(len(elevators), "elevators")
+elevators = list(find_solutions(elevator_spec, elevator_domain))
+print(len(elevators), "elevators")
 
 
 # -----------------------------------------------------------------------------
@@ -316,6 +392,19 @@ def test_elevator():
         # This is pseudo-code.  You have to fill in details.
         
         # Try all possible events on the elevator that can occur in this state
+        all_possible_events = lambda state: [
+            ('destination', floor) for floor in range(1,6)
+        ] + [
+            ('up_request', floor) for floor in range(1,5)
+        ] + [
+            ('down_request', floor) for floor in range(2,6)
+        ] + (
+            [('floor_sensor', state['floor'] + 1)] if state['mode'] == 'MOVINGUP' and state['floor'] < 5 else []
+        ) + (
+            [('floor_sensor', state['floor'] - 1)] if state['mode'] == 'MOVINGDOWN' and state['floor'] > 1 else []
+        ) + (
+            [('doors_close', state['floor'])] if state['mode'] in {'LOADINGUP', 'LOADINGDOWN', 'UNLOADING'} else []
+        )
         for event, floor in all_possible_events(state):
             # Create an elevator instance
             elev = Elevator(**state)
@@ -328,7 +417,7 @@ def test_elevator():
                 elevator_spec(**vars(elev))
             except Fail:
                 print(f"BAD! {state} : ({event},{floor}) -> {elev}")
-
+test_elevator()
 # Hint: Make sure you only generate 'floor_sensor' events if
 # the elevator is moving and only for an adjacent floor (i.e.,
 # if MOVINGUP on floor 3, you can trigger the floor sensor for

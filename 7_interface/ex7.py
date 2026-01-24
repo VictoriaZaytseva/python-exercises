@@ -40,12 +40,11 @@ assert chained(2) == 576
 
 def chained_after(x:int) -> int:
     from ex6 import after, Result, Ok, Error
-    a = after(1, A(x))     # Call a = A(x) after 1 second   (must modify)
-    b = after(2, B(a.unwrap()))     # Call b = B(a), 2 seconds after that (must modify)
-    c = after(3, C(b.unwrap()))     # Call c = C(b), 3 seconds after that (must modify)
-    return c
-print("Starting chained after...")
-print("Result:", chained_after(2).unwrap())  # Uncomment
+    a = after(1, lambda: A(x))     # Call a = A(x) after 1 second   (must modify)
+    b = after(2, lambda: B(a.unwrap()))     # Call b = B(a), 2 seconds after that (must modify)
+    c = after(3, lambda: C(b.unwrap()))     # Call c = C(b), 3 seconds after that (must modify)
+    return c.unwrap()
+
 assert chained_after(2).unwrap() == 576        # Uncomment
 
 # One problem with the chaining is that everything gets very messy
@@ -98,7 +97,11 @@ class Ok(Result):
     
     def __rshift__(self, func) -> Result:
         # self >> func
-        ...
+       try:
+           result = func(self._value)
+           return Ok(result)
+       except Exception as e:
+           return Error(e)
         # You implement
 
 class Error(Result):
@@ -107,7 +110,7 @@ class Error(Result):
 
     def __rshift__(self, func) -> Result:
         # self >> func
-        ...
+        return self
         # You implement
 
 
@@ -128,7 +131,7 @@ def test_chained_operator(x):
             assert isinstance(e, TypeError)
 
 # Uncomment            
-# test_chained_operator(2)
+test_chained_operator(2)
 
 # -----------------------------------------------------------------------------
 # Challenge:
